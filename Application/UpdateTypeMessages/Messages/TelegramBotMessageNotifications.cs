@@ -164,7 +164,7 @@ public class TelegramBotMessageNotifications
                                 $" пожалуйста обновите свои уведомления</b>",
                                 0, ParseMode.Html, replyMarkup: _myKeyboardMarkup.InlineUpdateNotifyKeyboardMarkup(),cancellationToken:cancellationToken);
                         }
-                    }
+                    } 
                     break;
             }
             return Unit.Value;

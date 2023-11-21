@@ -87,7 +87,7 @@ public class TelegramBotMessageWeatherForFiveDays
             switch (result.Item2)
             {
                 // Если пользователь ожиает локацию => 
-                case { } s when s == "WaitingForCityOrLocation" :
+                case var s when s == "WaitingForCityOrLocation" :
                     // Бот печатает
                     await _bot.SendChatActionAsync(request.Message.From!.Id, ChatAction.Typing);
                     // Возвращаем ответ
@@ -98,7 +98,7 @@ public class TelegramBotMessageWeatherForFiveDays
                     break;
                 
                 // Если не ожидает локацию => 
-                case { } s when s == "ComleatedUser" :
+                case var s when s == "ComleatedUser" :
                     
                     // Отправляем запрос для получение погодных данных
                     var arrayList = await _weatherApiClientAccessor.GetWeatherForFiveDaysAsync(result.Item1.Location, cancellationToken);

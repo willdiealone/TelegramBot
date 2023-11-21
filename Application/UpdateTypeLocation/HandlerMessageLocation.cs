@@ -62,7 +62,7 @@ public class HandlerMessageLocation
             switch (result.Item2)
             {
                 // Если ожидает локацию =>
-                case { } s when s == "WaitingForCityOrLocation" :
+                case var s when s == "WaitingForCityOrLocation" :
                     // Отправляем запрос для получения геоданных
                     var success = await _locationAccessor.GetLocation(request.Location,cancellationToken);
                     // Подставляем данные и возвращаем сообщение пользователю с результатом
@@ -88,7 +88,7 @@ public class HandlerMessageLocation
                     break;
                 
                 // Если не ожидает локацию =>
-                case { } s when s == "ComleatedUser" :
+                case var s when s == "ComleatedUser" :
                     // Отправляем запрос для получения геоданных
                     success = await _locationAccessor.GetLocation(request.Location, cancellationToken);
                     // Подставляем данные и возвращаем сообщение пользователю с результатом
@@ -112,7 +112,7 @@ public class HandlerMessageLocation
                     }
                     break;
                 // Если ожидает временную локацию =>
-                case { } s when s == "TemporaryLocation" :
+                case var s when s == "TemporaryLocation" :
                     // Отправляем запрос для получения геоданных
                     success = await _locationAccessor.GetLocation(request.Location, cancellationToken);
                     // Подставляем данные и возвращаем сообщение пользователю с результатом
