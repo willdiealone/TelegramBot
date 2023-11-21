@@ -19,6 +19,8 @@ public class TelegramBotPaymentByChoosePlan
         public string NamePlan { get; set; }
         // id пользователя
         public long TelegramId { get; set; }
+        
+        public string CallbackQueryId { get; set; }
     }
 
     public sealed class Handler : IRequestHandler<Query, Unit>
@@ -41,11 +43,12 @@ public class TelegramBotPaymentByChoosePlan
         public async Task<Unit> Handle(Query request, CancellationToken cancellationToken)
         {
             var label = Guid.NewGuid(); 
-            var quickpay = new Quickpay(receiver: "4100118408605024", quickpayForm: "shop", sum: 6, label:label.ToString(), paymentType: "AC");
+            var quickpay = new Quickpay(receiver: "4100118408605024", quickpayForm: "shop", sum: 10, label:label.ToString(), paymentType: "AC");
+
+
             
-            // Бот печатает
-            await _bot.SendChatActionAsync(request.TelegramId, ChatAction.Typing);
             // Ответ пользователю
+            await _bot.AnswerCallbackQueryAsync(request.CallbackQueryId, cancellationToken: cancellationToken);
             await _bot.SendPhotoAsync(request.TelegramId,
                 photo: InputFile.FromUri("https://github.com/willdiealone/TelegramBot/blob/main/Application/Images/plan.JPG?raw=true"),
                 caption: "<b>Вы выбрали:\n\n" +
@@ -55,48 +58,39 @@ public class TelegramBotPaymentByChoosePlan
             
             PaymentListenerToYooMoney paymentListenerToYooMoney = new(label.ToString(),DateTime.Today,Environment.GetEnvironmentVariable("NOTIFICATION_SECRET"));
             string resultPayment = string.Empty;
-            var result = Task.Run(async () =>
+            _ = Task.Run(async () =>
             {
-                 resultPayment = await paymentListenerToYooMoney.Listen("127.0.0.1", 8080);
-                // обработка результата
+                 resultPayment = await paymentListenerToYooMoney.Listen("127.0.0.1", 9000);
                 
-                // TODO: походу это надо поставить сюда !
-                //if (result.IsCompleted)
-                // if (resultPayment.Contains("\nУспешно"))
+                 if (resultPayment.Contains("\nУспешно"))
+                 {
+                     Console.WriteLine(resultPayment);
+                     var user = await _dataContext.Users.Include(u=>u.Plan).FirstOrDefaultAsync(u => u.UserId == request.TelegramId);
+                     if (user.Plan is null || user.Plan.PlansName == "")
+                     {
+                         user.Plan = new Plan
+                         {
+                             PlansName = "Premium",
+                             PlanAmount = 10,
+                             Label = label,
+                             CreateAt = DateTime.UtcNow
+                         };   
+                     }
+
+                     var success = await _dataContext.SaveChangesAsync() > 0;
+
+                     if (success)
+                     {
+                         // Бот печатает
+                         await _bot.SendChatActionAsync(request.TelegramId, ChatAction.Typing); 
+                         // Ответ пользователю
+                         await _bot.SendTextMessageAsync(request.TelegramId, 
+                             "\ud83e\uddd1\u200d\ud83d\udd27 <b>Подписка Premium успешно подключена</b>",
+                             0,ParseMode.Html, 
+                             replyMarkup: _myKeyboardMarkup.CreateReplyKeyboardMarkupWithFullPlan());
+                     }
+                 }
             });
-
-            
-            if (result.IsCompleted)
-            {
-                if (resultPayment.Contains("\nУспешно"))
-                {
-                    var user = await _dataContext.Users.Include(u=>u.Plan).FirstOrDefaultAsync(u => u.UserId == request.TelegramId);
-                    if (user.Plan is null || user.Plan.PlansName is null)
-                    {
-                        user.Plan = new Plan
-                        {
-                            PlansName = "Premium",
-                            PlanAmount = 10,
-                            Label = label,
-                            CreateAt = DateTime.UtcNow
-                        };   
-                    }
-
-                    var success = await _dataContext.SaveChangesAsync() > 0;
-
-                    if (success)
-                    {
-                        // Бот печатает
-                        await _bot.SendChatActionAsync(request.TelegramId, ChatAction.Typing); 
-                        // Ответ пользователю
-                        await _bot.SendTextMessageAsync(request.TelegramId, 
-                            "\ud83e\uddd1\u200d\ud83d\udd27 <b>Подписка Premium успешно подключена</b>",
-                            0,ParseMode.Html, 
-                            replyMarkup: _myKeyboardMarkup.CreateReplyKeyboardMarkupWithFullPlan());
-                        result.Dispose();
-                    }
-                }    
-            }
             return Unit.Value;
         }
     }

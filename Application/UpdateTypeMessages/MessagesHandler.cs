@@ -55,14 +55,6 @@ public static  class MessagesHandler
 			        });
         			break;
 		        
-		        case "Выбрать Premium \ud83d\udd25":
-			        await mediator.Send(new TelegramBotPaymentByChoosePlan.Query
-			        {
-				        NamePlan = "Premium \ud83d\udd25",
-				        TelegramId = message.From.Id,
-			        });
-			        break;
-		        
 		        case "Моя геолокация \ud83e\udd35" :
 			        await mediator.Send(new TelegramBotMessageMyLocation.Query
 			        {

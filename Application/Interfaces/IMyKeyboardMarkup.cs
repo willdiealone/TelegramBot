@@ -28,7 +28,7 @@ public interface IMyKeyboardMarkup
     /// Метод создает инлайн кнопку для оплаты премиум плана
     /// </summary>
     /// <returns></returns>
-    public ReplyKeyboardMarkup InnlineChosePremiumPlanKeyboardMarkup();
+    public InlineKeyboardMarkup InnlineChosePremiumPlanKeyboardMarkup();
 
     /// <summary>
     /// Метод кнопки обновления уведомлений еси приложение дроаплось

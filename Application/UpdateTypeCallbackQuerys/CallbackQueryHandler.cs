@@ -52,6 +52,14 @@ public static class CallbackQueryHandler
                     
                 });
                 break;
+            case "Выбрать Premium \ud83d\udd25":
+                await mediator.Send(new TelegramBotPaymentByChoosePlan.Query
+                {
+                    CallbackQueryId = callbackQuery.Id,
+                    NamePlan = "Premium \ud83d\udd25",
+                    TelegramId = callbackQuery.From.Id,
+                });
+                break;
             default: 
                 await mediator.Send(new Notify.Query
                 {

@@ -55,7 +55,7 @@ public class TelegramBotMessageSubscribe
                          "<b>\ud83c\udf0d Изменить локацию:</b>\nЛегко меняйте город, чтобы узнать погоду в разных местах.\n\n" +
                          "<b>\ud83d\udcc5 Уведомления:</b>\nНастраивайте уведомления и получайте актуальный прогноз погоды каждый день в выбранное вами время.\n\n" +
                          "С премиум подпиской у вас есть доступ ко всем функциям бота\n\n" +
-                         "<b>Цена Премиум плана:\n20 рублей.</b>", 
+                         "<b>Цена Премиум плана:\n10 рублей.</b>", 
                     parseMode: ParseMode.Html,replyMarkup: _myKeyboardMarkup.InnlineChosePremiumPlanKeyboardMarkup(), cancellationToken: cancellationToken);
             }
             else if (result.Item1.Plan.PlansName == "Premium")
