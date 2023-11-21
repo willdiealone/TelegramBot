@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Migrate": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "MIGRATION_IN_PROGRESS": "false"
+      }
+    }
+  }
+}
