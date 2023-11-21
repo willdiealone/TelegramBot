@@ -15,7 +15,7 @@ public static class CallbackQueryHandler
     /// <param name="mediator"></param>
     /// <param name="callbackQuery"></param>
     /// <param name="serviceProvider"></param>
-    public static async Task HandleCallbackQuery(ITelegramBotClient bot,IMediator mediator,CallbackQuery callbackQuery,
+    public static async Task HandleCallbackQuery(IMediator mediator,CallbackQuery callbackQuery,
         IServiceProvider serviceProvider)
     {
         switch (callbackQuery.Data)
@@ -37,6 +37,14 @@ public static class CallbackQueryHandler
                 });
                 break;
             case "Отключить уведомления": 
+                await mediator.Send(new EndJob.Query
+                {
+                    CallbackQueryId = callbackQuery.Id,
+                    Id = callbackQuery.From.Id
+                    
+                });
+                break;
+            case "\u274c Отмена": 
                 await mediator.Send(new EndJob.Query
                 {
                     CallbackQueryId = callbackQuery.Id,
