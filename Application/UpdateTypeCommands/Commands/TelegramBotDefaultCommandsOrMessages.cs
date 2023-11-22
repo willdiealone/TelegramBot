@@ -8,15 +8,15 @@ using Telegram.Bot.Types.Enums;
 
 namespace Application.UpdateTypeCommands.Commands;
 
-public class TelegramBotDefaultCommandsOrMessages
+public sealed class TelegramBotDefaultCommandsOrMessages
 {
-    public sealed class Query : IRequest<Unit>
+    public sealed class Request : IRequest<Unit>
     {
         public long TelegramUserId { get; set; }
         public Message Message { get; set; }
     }
     
-    public sealed class Handler : IRequestHandler<Query, Unit>
+    public class Handler : IRequestHandler<Request, Unit>
     {
         /// <summary>
         /// Прокидываем экземпляр бота
@@ -50,7 +50,7 @@ public class TelegramBotDefaultCommandsOrMessages
             _keyboardMarkup = keyboardMarkup;
         }
         
-        public async Task<Unit> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
         {
            
             // Находим пользователя в бд по id

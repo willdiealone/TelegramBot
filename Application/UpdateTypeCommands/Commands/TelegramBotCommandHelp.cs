@@ -6,18 +6,15 @@ using Telegram.Bot.Types.Enums;
 
 namespace Application.UpdateTypeCommands.Commands;
 
-public class TelegramBotCommandHelp
+public sealed class TelegramBotCommandHelp
 {
-    public sealed class Query : IRequest<Unit>
+    public class Request : IRequest<Unit>
     {
         // Сообщение пользователя
         public Message Message { get; set; }
-        
-        // id пользователя
-        public long TelegramUserId { get; set; }
     }
     
-    public sealed class Handler : IRequestHandler<Query, Unit>
+    public class Handler : IRequestHandler<Request, Unit>
     {
         // Инстанс телеграм бота
         private readonly ITelegramBotClient _bot;
@@ -35,7 +32,7 @@ public class TelegramBotCommandHelp
             _keyboardMarkup = keyboardMarkup;
         }
         
-        public async Task<Unit> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
         {
             // Находим пользователя в бд по id
             var result = await _userAccessor.FindOrAddUserInDb(request.Message);

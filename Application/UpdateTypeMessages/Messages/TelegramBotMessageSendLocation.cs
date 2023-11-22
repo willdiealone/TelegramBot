@@ -9,15 +9,15 @@ using Telegram.Bot.Types.Enums;
 
 namespace Application.UpdateTypeMessages.Messages;
 
-public class TelegramBotMessageSendLocation
+public sealed class TelegramBotMessageSendLocation
 {
-    public sealed class Query : IRequest<Unit>
+    public class Request : IRequest<Unit>
     {
         public long TelegramUserId { get; set; }
         public Message Message { get; set; }
     }
     
-    public sealed class Handler : IRequestHandler<Query, Unit>
+    public class Handler : IRequestHandler<Request, Unit>
     {
         /// <summary>
         /// Прокидываем экземпляр бота
@@ -41,7 +41,7 @@ public class TelegramBotMessageSendLocation
             _myKeyboardMarkup = myKeyboardMarkup;
         }
         
-        public async Task<Unit> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
         {
             var user = await _dataContext.Users.FirstOrDefaultAsync(u => u.UserId == request.TelegramUserId);
             user.State = UserState.WaitingForCityOrLocation;

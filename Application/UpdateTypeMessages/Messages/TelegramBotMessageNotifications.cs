@@ -11,9 +11,9 @@ using Telegram.Bot.Types.Enums;
 
 namespace Application.UpdateTypeMessages.Messages;
 
-public class TelegramBotMessageNotifications
+public sealed class TelegramBotMessageNotifications
 {
-    public sealed class Query : IRequest<Unit>
+    public class Request : IRequest<Unit>
     {
         // Сообщение пользователя
         public Message Message { get; set; }
@@ -22,7 +22,7 @@ public class TelegramBotMessageNotifications
         public long TelegramId { get; set; }
     }
 
-    public sealed class Handler : IRequestHandler<Query, Unit>
+    public class Handler : IRequestHandler<Request, Unit>
     {
         // Доступк пользователю из бд по id 
         private readonly IUserAccessor _userAccessor;
@@ -49,7 +49,7 @@ public class TelegramBotMessageNotifications
             _scheduler = scheduler;
         }
         
-        public async Task<Unit> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
         {
             // Находим пользователя в бд по id
             var result = await _userAccessor.FindOrAddUserInDb(request.Message);

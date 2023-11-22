@@ -10,9 +10,9 @@ using Telegram.Bot.Types.Enums;
 
 namespace Application.UpdateTypeCallbackQuerys.NotificationsQuerys;
 
-public class StartJob 
+public sealed class StartJob 
 {
-    public sealed class Query : IRequest<Unit>
+    public class Request : IRequest<Unit>
     {
         // id пользователя
         public long Id { get; set; }
@@ -21,7 +21,7 @@ public class StartJob
         public IServiceProvider ServiceProvider { get; set; }
     }
 
-    public sealed class Handler : IRequestHandler<Query, Unit>
+    public class Handler : IRequestHandler<Request, Unit>
     {
         // Инстанс задачи
         private readonly IMyJob _myJob;
@@ -53,7 +53,7 @@ public class StartJob
             _myKeyboardMarkup = myKeyboardMarkup;
         }
         
-        public async Task<Unit> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
         {
             // Создаем переменную для хранения локации
             string location = String.Empty;

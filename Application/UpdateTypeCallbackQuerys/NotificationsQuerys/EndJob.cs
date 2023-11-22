@@ -8,16 +8,16 @@ using Telegram.Bot.Types.Enums;
 
 namespace Application.UpdateTypeCallbackQuerys.NotificationsQuerys;
 
-public class EndJob
+public sealed class EndJob
 {
-    public sealed class Query : IRequest<Unit>
+    public class Request : IRequest<Unit>
     {
         public long Id { get; set; }
         
         public string CallbackQueryId { get; set; }
     }
 
-    public sealed class Handler : IRequestHandler<Query, Unit>
+    public class Handler : IRequestHandler<Request, Unit>
     {
         // Инстанс задачи
         private readonly IMyJob _myJob;
@@ -44,7 +44,7 @@ public class EndJob
             _keyboardMarkup = keyboardMarkup;
         }
         
-        public async Task<Unit> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
         {
             // Получаем пользователя из бд по id включая таблцу уведомления
             var user = await _dataContext.Users.Include(user => user.Notifications)

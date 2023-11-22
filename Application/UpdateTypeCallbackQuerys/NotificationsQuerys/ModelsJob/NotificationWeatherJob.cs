@@ -15,7 +15,7 @@ using Telegram.Bot.Types.Enums;
 
 namespace Application.UpdateTypeCallbackQuerys.NotificationsQuerys.ModelsJob;
 
-public class NotificationWeatherJob : IJob
+public sealed class NotificationWeatherJob : IJob
 {
 	public static long TelegramId { get; set; }
 	public static IServiceProvider ServiceProvider { get; set; }

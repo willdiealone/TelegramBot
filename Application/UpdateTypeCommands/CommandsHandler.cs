@@ -5,7 +5,7 @@ using Telegram.Bot.Types;
 
 namespace Application.UpdateTypeCommands;
 
-public  class CommandsHandler
+public static class CommandsHandler
 {
 	/// <summary>
 	/// Метод обработки команд бота
@@ -18,7 +18,7 @@ public  class CommandsHandler
     	switch (message.Text)
     	{
     		case "/start":
-    			await mediator.Send(new TelegramBotCommandStart.Query 
+    			await mediator.Send(new TelegramBotCommandStart.Request 
 			    {
 				    Message = message,
 				    TelegramUserId = message.From!.Id 
@@ -26,15 +26,14 @@ public  class CommandsHandler
     			break;
 		    
 		    case "/help":
-			    await mediator.Send(new TelegramBotCommandHelp.Query
+			    await mediator.Send(new TelegramBotCommandHelp.Request
 			    {
 				    Message = message,
-				    TelegramUserId = message.From!.Id,
 			    });
 			    break;
 		    
     		default: 
-    			await mediator.Send(new TelegramBotDefaultCommandsOrMessages.Query
+    			await mediator.Send(new TelegramBotDefaultCommandsOrMessages.Request
 			    {
 				    TelegramUserId = message.From!.Id,
 				    Message = message

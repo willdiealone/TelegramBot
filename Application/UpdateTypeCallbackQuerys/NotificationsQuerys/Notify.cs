@@ -8,9 +8,9 @@ using Telegram.Bot.Types.Enums;
 
 namespace Application.UpdateTypeCallbackQuerys.NotificationsQuerys;
 
-public class Notify 
+public sealed class Notify 
 {
-    public sealed class Query : IRequest<Unit>
+    public class Request : IRequest<Unit>
     {
         // id пользователя
         public long TelegramId { get; set; }
@@ -20,7 +20,7 @@ public class Notify
         public string Time { get; set; }
     }
 
-    public sealed class Handler : IRequestHandler<Query, Unit>
+    public class Handler : IRequestHandler<Request, Unit>
     {
         // Контекст базы данных
         private readonly DataContext _dataContext;
@@ -43,7 +43,7 @@ public class Notify
             _myKeyboardMarkup = myKeyboardMarkup;
         }
         
-        public async Task<Unit> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
         {
             // Получаем инлайн кнопки для подтверждения
            var keyboardMarkup = _myKeyboardMarkup.InlineConfirmKeyboardMarkup();

@@ -9,9 +9,9 @@ using Telegram.Bot.Types.Enums;
 
 namespace Application.UpdateTypeMessages.Messages;
 
-public class TelegramBotMessageMyLocation
+public sealed class TelegramBotMessageMyLocation
 {
-    public sealed class Query : IRequest<Unit>
+    public class Request : IRequest<Unit>
     {
         // id пользователя
         public long TelegramUserId { get; set; }
@@ -20,7 +20,7 @@ public class TelegramBotMessageMyLocation
         public Message Message { get; set; }
     }
     
-    public sealed class Handler : IRequestHandler<Query, Unit>
+    public class Handler : IRequestHandler<Request, Unit>
     {
         // Экземпляр телеграм бота
         private readonly ITelegramBotClient _bot;
@@ -43,7 +43,7 @@ public class TelegramBotMessageMyLocation
         }
         
 
-        public async Task<Unit> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
         {
             var user = await _dataContext.Users.Include(u=>u.Plan).FirstOrDefaultAsync(u => u.UserId == request.TelegramUserId);
             // Проверяем план пользователя 

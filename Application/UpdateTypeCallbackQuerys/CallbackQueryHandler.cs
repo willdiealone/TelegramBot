@@ -21,7 +21,7 @@ public static class CallbackQueryHandler
         switch (callbackQuery.Data)
         {
             case "\u2705 Подтверждаю":
-                await mediator.Send(new StartJob.Query
+                await mediator.Send(new StartJob.Request
                 {
                     CallbackQueryId = callbackQuery.Id,
                     Id = callbackQuery.From.Id,
@@ -29,7 +29,7 @@ public static class CallbackQueryHandler
                 });
                 break;
             case "Обновить уведомления":
-                await mediator.Send(new StartJob.Query
+                await mediator.Send(new StartJob.Request
                 {
                     CallbackQueryId = callbackQuery.Id,
                     Id = callbackQuery.From.Id,
@@ -37,7 +37,7 @@ public static class CallbackQueryHandler
                 });
                 break;
             case "Отключить уведомления": 
-                await mediator.Send(new EndJob.Query
+                await mediator.Send(new EndJob.Request
                 {
                     CallbackQueryId = callbackQuery.Id,
                     Id = callbackQuery.From.Id
@@ -45,7 +45,7 @@ public static class CallbackQueryHandler
                 });
                 break;
             case "\u274c Отмена": 
-                await mediator.Send(new EndJob.Query
+                await mediator.Send(new EndJob.Request
                 {
                     CallbackQueryId = callbackQuery.Id,
                     Id = callbackQuery.From.Id
@@ -53,7 +53,7 @@ public static class CallbackQueryHandler
                 });
                 break;
             case "Выбрать Premium \ud83d\udd25":
-                await mediator.Send(new TelegramBotPaymentByChoosePlan.Query
+                await mediator.Send(new TelegramBotPaymentByChoosePlan.Request
                 {
                     CallbackQueryId = callbackQuery.Id,
                     NamePlan = "Premium \ud83d\udd25",
@@ -61,7 +61,7 @@ public static class CallbackQueryHandler
                 });
                 break;
             default: 
-                await mediator.Send(new Notify.Query
+                await mediator.Send(new Notify.Request
                 {
                     TelegramId = callbackQuery.From.Id,
                     CallbackQueryId = callbackQuery.Id,

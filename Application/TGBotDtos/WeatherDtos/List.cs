@@ -1,7 +1,7 @@
 
 namespace Application.TGBotDtos.WeatherDtos;
 
-public class List
+public sealed class List
 {
     public Main Main { get; set; }
     public Weather[] Weather { get; set; }

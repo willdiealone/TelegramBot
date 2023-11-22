@@ -8,13 +8,10 @@ using Telegram.Bot.Types.Enums;
 
 namespace Application.UpdateTypeLocation;
 
-public class HandlerMessageLocation 
+public sealed class HandlerMessageLocation 
 {
-     public sealed class Query : IRequest<Unit>
+     public class Request : IRequest<Unit>
     {
-        // id пользователя
-        public long TelegramUserId { get; set; }
-        
         // Сообщение пользователя
         public Message Message { get; set; }
         
@@ -22,7 +19,7 @@ public class HandlerMessageLocation
         public string Location { get; set; }
     }
     
-    public sealed class Handler : IRequestHandler<Query, Unit>
+    public class Handler : IRequestHandler<Request, Unit>
     {
         // Иснтанс телеграм бота
         private readonly ITelegramBotClient _bot;
@@ -49,7 +46,7 @@ public class HandlerMessageLocation
             _keyboardMarkup = keyboardMarkup;
         }
         
-        public async Task<Unit> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
         {
             // Находим пользователя в бд по id
             var result = await _userAccessor.FindOrAddUserInDb(request.Message);

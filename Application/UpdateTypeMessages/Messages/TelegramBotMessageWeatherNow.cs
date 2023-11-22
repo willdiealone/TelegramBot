@@ -12,9 +12,9 @@ using Telegram.Bot.Types.Enums;
 
 namespace Application.UpdateTypeMessages.Messages;
 
-public class TelegramBotMessageWeatherNow
+public sealed class TelegramBotMessageWeatherNow 
 {
-	public sealed class Query : IRequest<Unit>
+	public class Request : IRequest<Unit>
 	{
 		// Сообшение пользователя
 		public static Message Message { get; set; }
@@ -23,7 +23,7 @@ public class TelegramBotMessageWeatherNow
 		public static long TelegramId { get; set; }
 	}
 	
-	public sealed class Handler : IRequestHandler<Query, Unit>
+	public class Handler : IRequestHandler<Request, Unit>
 	{
 		// Маппер для перобразования дынных
 		private readonly IMapper _mapper;
@@ -66,10 +66,10 @@ public class TelegramBotMessageWeatherNow
 		/// <param name="request">Свойсвто из запроса</param>
 		/// <param name="cancellationToken">Токен отмены</param>
 		/// <returns>Перечисление данных о погоде для нескольких городов</returns>
-		public async Task<Unit> Handle(Query request, CancellationToken cancellationToken)
+		public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
 		{
 			// Находим пользователя в бд по id
-			var result = await _userAccessor.FindOrAddUserInDb(Query.Message);
+			var result = await _userAccessor.FindOrAddUserInDb(Request.Message);
 			List[] list;
 			WeatherDto weatherDto;
 			// Проверяем состояние пользователя 
@@ -78,9 +78,9 @@ public class TelegramBotMessageWeatherNow
 				// Если он ожидает локиции => 
 				case var s when s == "WaitingForCityOrLocation":
 					// Бот печатает
-					await _bot.SendChatActionAsync(Query.Message.From!.Id, ChatAction.Typing);
+					await _bot.SendChatActionAsync(Request.Message.From!.Id, ChatAction.Typing);
 					// Ответ пользователю
-					await _bot.SendTextMessageAsync(Query.Message.From!.Id,
+					await _bot.SendTextMessageAsync(Request.Message.From!.Id,
 							"\u270d\ufe0f <b>Напишите название населенного пункта или отправьте свою геолокацию,"
 							+ " чтобы я показал погоду</b>", 0, ParseMode.Html,
 							replyMarkup: _myKeyboardMarkup.CreateOnlyLocationKeyboardMarkup());
@@ -164,9 +164,9 @@ public class TelegramBotMessageWeatherNow
 							}
 						}
 						// Бот печатает
-						await _bot.SendChatActionAsync(Query.Message.From!.Id, ChatAction.Typing);
+						await _bot.SendChatActionAsync(Request.Message.From!.Id, ChatAction.Typing);
 						// Ответ пользователю
-						await _bot.SendTextMessageAsync(Query.TelegramId, builder.ToString(),
+						await _bot.SendTextMessageAsync(Request.TelegramId, builder.ToString(),
 						0, ParseMode.Html, replyMarkup: keyboard);
 						
 					}
@@ -180,9 +180,9 @@ public class TelegramBotMessageWeatherNow
 						if (seccess)
 						{
 							// Бот печатает
-							await _bot.SendChatActionAsync(Query.Message.From!.Id, ChatAction.Typing);
+							await _bot.SendChatActionAsync(Request.Message.From!.Id, ChatAction.Typing);
 							// Ответ пользователю
-							await _bot.SendTextMessageAsync(Query.Message.From!.Id,
+							await _bot.SendTextMessageAsync(Request.Message.From!.Id,
 								"\ud83d\udc77 <b>Извините, но мы не смогли дозониться " +
 								"или мы не можем получить погоду в это регионе, попробуйте изменить адрес или отправьте геолокацию!</b>",
 								0, ParseMode.Html, replyMarkup: _myKeyboardMarkup.CreateOnlyLocationKeyboardMarkup());

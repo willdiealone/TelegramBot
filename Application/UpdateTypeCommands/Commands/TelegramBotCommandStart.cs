@@ -11,7 +11,7 @@ public sealed class TelegramBotCommandStart
     /// <summary>
     /// Класс для хранения и передачи параметров запроса 
     /// </summary>
-    public sealed class Query : IRequest<Unit>
+    public class Request : IRequest<Unit>
     {
         public Message Message { get; set; }
         public long TelegramUserId { get; set; }
@@ -20,7 +20,7 @@ public sealed class TelegramBotCommandStart
     /// <summary>
     /// Класс обрабатывает вопрос пользователя
     /// </summary>
-    public sealed class Handler : IRequestHandler<Query, Unit>
+    public class Handler : IRequestHandler<Request, Unit>
     {
         /// <summary>
         /// Прокидываем экземпляр бота
@@ -47,7 +47,7 @@ public sealed class TelegramBotCommandStart
         /// <param name="request">параметры запроса</param>
         /// <param name="cancellationToken">токен отмены</param>
         /// <returns></returns>
-        public async Task<Unit> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
         {
             // Находим пользователя в бд по id
             var result = await _userAccessor.FindOrAddUserInDb(request.Message);

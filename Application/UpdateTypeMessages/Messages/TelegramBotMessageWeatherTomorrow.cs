@@ -11,9 +11,9 @@ using Telegram.Bot.Types.Enums;
 
 namespace Application.UpdateTypeMessages.Messages;
 
-public class TelegramBotMessageWeatherTomorrow
+public sealed class TelegramBotMessageWeatherTomorrow
 {
-    public sealed class Query : IRequest<Unit>
+    public class Request : IRequest<Unit>
     {
         // Сообшение пользователя
         public Message Message { get; set; }
@@ -22,7 +22,7 @@ public class TelegramBotMessageWeatherTomorrow
         public long TelegramId { get; set; }
     }
 
-    public sealed class Handler : IRequestHandler<Query, Unit>
+    public class Handler : IRequestHandler<Request, Unit>
     {
         // Маппер для перобразования дынных.
         private readonly IMapper _mapper;
@@ -61,7 +61,7 @@ public class TelegramBotMessageWeatherTomorrow
         }
         
         // Метод для обработки запроса на получение погодных данных.
-        public async Task<Unit> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
         {
             // Находим пользователя в бд по id
             var result = await _userAccessor.FindOrAddUserInDb(request.Message);

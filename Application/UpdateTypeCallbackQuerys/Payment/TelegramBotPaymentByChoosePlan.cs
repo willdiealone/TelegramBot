@@ -11,9 +11,9 @@ using yoomoney_api.quickpay;
 
 namespace Application.UpdateTypeCallbackQuerys.Payment;
 
-public class TelegramBotPaymentByChoosePlan
+public sealed class TelegramBotPaymentByChoosePlan
 {
-    public sealed class Query : IRequest<Unit>
+    public class Request : IRequest<Unit>
     {
         // Название выбранного плана
         public string NamePlan { get; set; }
@@ -23,7 +23,7 @@ public class TelegramBotPaymentByChoosePlan
         public string CallbackQueryId { get; set; }
     }
 
-    public sealed class Handler : IRequestHandler<Query, Unit>
+    public class Handler : IRequestHandler<Request, Unit>
     {
         // Инстанс бота
         private readonly ITelegramBotClient _bot;
@@ -40,7 +40,7 @@ public class TelegramBotPaymentByChoosePlan
             _myKeyboardMarkup = myKeyboardMarkup;
             _dataContext = dataContext;
         }
-        public async Task<Unit> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
         {
             var label = Guid.NewGuid(); 
             var quickpay = new Quickpay(receiver: "4100118408605024", quickpayForm: "shop", sum: 10, label:label.ToString(), paymentType: "AC");
@@ -53,7 +53,7 @@ public class TelegramBotPaymentByChoosePlan
                 photo: InputFile.FromUri("https://github.com/willdiealone/TelegramBot/blob/main/Application/Images/plan.JPG?raw=true"),
                 caption: "<b>Вы выбрали:\n\n" +
                 $"{request.NamePlan}\n" +
-                "К оплате: 20 рублей</b>",parseMode: ParseMode.Html,replyMarkup: 
+                "К оплате: 10 рублей</b>",parseMode: ParseMode.Html,replyMarkup: 
                 _myKeyboardMarkup.InlinePaymentKeyboardMarkup(quickpay.LinkPayment),cancellationToken: cancellationToken);
             
             PaymentListenerToYooMoney paymentListenerToYooMoney = new(label.ToString(),DateTime.Today,Environment.GetEnvironmentVariable("NOTIFICATION_SECRET"));
